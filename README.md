@@ -1,5 +1,43 @@
-FPGA Digital Clock (Basys 3)A Verilog implementation of a digital clock on the Xilinx Basys 3 FPGA (Artix-7). The clock supports 24-hour timekeeping, dual display modes (HH:MM / MM:SS), user time configuration via switches and buttons, and input validation with error detection.Features24-Hour Timekeeping: Tracks hours, minutes, and seconds using BCD (Binary-Coded Decimal) logic.Dual Display Modes:Mode 0: Display HH : MM (Hours and Minutes).Mode 1: Display MM : SS (Minutes and Seconds).Time Setting / Loading: Load hours or minutes using the onboard 8-bit switches.Error Validation: Detects invalid time inputs (e.g., hours $> 23$ or minutes $> 59$) and illuminates an error LED (err_led) to prevent loading invalid values.Multiplexed 7-Segment Display: Smoothly refreshes the four-digit 7-segment display on the Basys 3 board.Enable / Pause: Toggle the clock increment using the enable switch (ena).Hardware Pin Mapping (Basys 3)Port NameBasys 3 ComponentPin LocationDescriptionclk100 MHz OscillatorW5System ClockresetCenter Button (BTNC)U18System Resetload_hTop Button (BTNU)T18Load Hours from Switchesload_mLeft Button (BTNL)W19Load Minutes from Switchessw[7:0]Switches 7 to 0W13 down to V17Input BCD values (Switches 7–4: Tens, Switches 3–0: Units)modeSwitch 15R2Display Mode (0 = HH:MM, 1 = MM:SS)enaSwitch 14T1Clock Enable / Pauseerr_ledLED 0U16Lights up on invalid inputseg[7:0]7-Segment CathodesW7 to V7Segment control (A–G, DP)an[3:0]7-Segment AnodesW4, V4, U4, U2Digit SelectionFile StructurePlaintext.
+# FPGA Digital Clock (Basys 3)
+
+A Verilog implementation of a **digital clock** on the **Xilinx Basys 3 FPGA** (Artix-7). The clock supports **24-hour timekeeping**, dual display modes (HH:MM / MM:SS), user time configuration via switches and buttons, and input validation with error detection.
+
+---
+
+## Features
+
+- **24-Hour Timekeeping:** Tracks hours, minutes, and seconds using BCD (Binary-Coded Decimal) logic.
+- **Dual Display Modes:**
+  - **Mode 0:** Display **HH : MM** (Hours and Minutes).
+  - **Mode 1:** Display **MM : SS** (Minutes and Seconds).
+- **Time Setting / Loading:** Load hours or minutes using the onboard 8-bit switches.
+- **Error Validation:** Detects invalid time inputs (e.g., hours > 23 or minutes > 59) and illuminates an error LED (`err_led`) to prevent loading invalid values.
+- **Multiplexed 7-Segment Display:** Smoothly refreshes the four-digit 7-segment display on the Basys 3 board.
+- **Enable / Pause:** Toggle the clock increment using the enable switch (`ena`).
+
+---
+
+## Hardware Pin Mapping (Basys 3)
+
+| Port Name | Basys 3 Component | Pin Location | Description |
+|---|---|---|---|
+| `clk` | 100 MHz Oscillator | `W5` | System Clock |
+| `reset` | Center Button (`BTNC`) | `U18` | System Reset |
+| `load_h` | Top Button (`BTNU`) | `T18` | Load Hours from Switches |
+| `load_m` | Left Button (`BTNL`) | `W19` | Load Minutes from Switches |
+| `sw[7:0]` | Switches 7 to 0 | `W13` down to `V17` | Input BCD values (Switches 7–4: Tens, Switches 3–0: Units) |
+| `mode` | Switch 15 | `R2` | Display Mode (`0` = HH:MM, `1` = MM:SS) |
+| `ena` | Switch 14 | `T1` | Clock Enable / Pause |
+| `err_led` | LED 0 | `U16` | Lights up on invalid input |
+| `seg[7:0]` | 7-Segment Cathodes | `W7` to `V7` | Segment control (A–G, DP) |
+| `an[3:0]` | 7-Segment Anodes | `W4`, `V4`, `U4`, `U2` | Digit Selection |
+
+---
+
+## File Structure
+
+```text
+.
 ├── top_module.v       # Top-level Verilog source code
 ├── Basys3_Master.xdc  # Vivado Constraints File
 └── tb_top.v           # Testbench for simulation
-How to RunOpen Xilinx Vivado.Create a new project selecting the Basys 3 board (Part: xc7a35tcpg236-1).Add top_module.v as a design source.Add Basys3_Master.xdc as a constraint file.Run Synthesis and Implementation.Generate Bitstream and program the Basys 3 board using the Hardware Manager.How to UseSet Initial Time:Set the desired BCD value on sw[7:0] (e.g., 8'h14 for 14).Press BTNU (load_h) to load hours, or BTNL (load_m) to load minutes.If you set an invalid value (e.g., $> 23$ for hours), err_led turns on and loading is blocked.Start / Pause: Flip Switch ena UP to start counting, or DOWN to pause.Toggle View: Flip Switch mode DOWN to view HH:MM, or UP to view MM:SS.
